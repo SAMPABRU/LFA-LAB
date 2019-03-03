@@ -1,5 +1,6 @@
 import re
 
+
 print("********* ------------------------------- *********")
 
 print("Projeto Linguagem Formais e Automatos - Laboratório")
@@ -8,114 +9,174 @@ print("********* ------------------------------- *********")
 
 '''variáveis'''
 
-a = True
+a = False
 b = True
 vetor = []
 variavel = ""
+continuar = ""
 alfabeto = []
 regras_producao = []
 variavel_inicial = ""
 contador = 0
 palavra_final = ""
 sequencia_utilizada_usuario = []
-alfabeto_contem_numero = False
+concatenar = ""
 
 regras = {
     "de": "",
     "para": ""
 }
 
+
+def valida_para(letra):
+
+    if len(letra) == 1:
+        if str(letra).upper() in vetor or str(letra).lower() in alfabeto:
+            return False
+        else:
+            print("\nValor digitado não foi encontrado nas Variáveis e nem no Alfabeto! Digite novamente!\n")
+            return True
+
+    else:
+        print("Foi digitado mais que uma letra por vez. Digite novamente!\n")
+        return True
+
+
+
 '''Execução do programa'''
 
-print("1 - Recebendo as VARIAVEIS\n")
+print("\n1 - Recebendo as VARIAVEIS\n")
 
 while b:
     b = False
-    while a:
-        variavel = input("Digite a VARIÁVEL")
-        vetor.append(variavel)
-        continuar = input("Deseja continuar? (S/N):  \t")
+    while not a:
+        if b:
+            b = False
+            variavel = ""
+            print("\nNão foi recebida nenhuma variável anteriormente, apenas um espao em branco. Digite novamente!\n")
 
-        if continuar != "S" or continuar != "s":
-            a = False
+        variavel = input("\nDigite a VARIÁVEL: \t").upper()
 
-            '''Verificar se no array eu não tenho espaço em branco, já que isso tem q estar no alfabeto'''
-            if len(vetor) <= 1:
-                for valor in range(1, len(vetor) + 1, 1):
-                    if vetor[valor - 1] == ' ':
-                        vetor = []
-                        a = True
-                        b = True
+        '''Verificar se não está sendo recebido variáveis duplicadas'''
+        if len(vetor) > 0:
+            if variavel in vetor:
+                a = False
+                print("\nFoi detectado duplicidade nas letras das variáveis. Digite novamente!\n")
+                variavel = ""
+
+        if variavel != "" and variavel != " ":
+            vetor.append(variavel.upper())
+            continuar = input("\nDeseja continuar? (S/N):  \t").upper()
+
+            if continuar != "S":
+                a = True
+
+                '''Verificar se no array eu não tenho espaço em branco, já que isso tem q estar no alfabeto'''
+                if len(vetor) > 0:
+                    for valor in range(0, len(vetor), 1):
+                        if vetor[valor] == "":
+                            vetor.remove("")
+                            print("\nEspaço em branco digitado removido...\n")
+                            a = True
+                            b = True
+                        if vetor[valor] == ' ':
+                            vetor.remove(" ")
+                            print("\nEspaço em branco digitado removido...\n")
+                            a = True
+                            b = True
+        else:
+            print("\nEspaço em branco ou nulo digitado! Entrada não válida! Digite novamente!\n")
 
 a = True
 continuar = ""
 
 
-print("2 - Recebendo as ALFABETO\n")
-
-#Esses caracteres não serão permitidos na String?
-#Verificar se esses caracteres podem existir no alfabeto digitado pelo usuário
-#verificar a presença deles https://www.geeksforgeeks.org/python-program-check-string-contains-special-character/
-#regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
+print("\n2 - Recebendo as ALFABETO\n")
 
 while a:
-    letra = input("Digite a letra do alfabeto: \t")
-    alfabeto.append(letra)
-    continuar = input("Deseja continuar? (S/N):  \t")
+    variavel = input("\nDigite a letra do alfabeto: \t")
 
-    if continuar != "S" or continuar != "s":
-        a = False
+    if len(alfabeto) > 0:
+        '''Verificar se não está sendo recebido letras do alfabeto duplicadas'''
+        if variavel in alfabeto:
+            a = True
+            print("\nFoi detctado duplicidade nas letras do alfabeto. Digite novamente!\n")
+            variavel = ""
 
-for valor in range(1, len(alfabeto) + 1, 1):
-    #Verifica se no alfabeto digitado tem números
-    if any(chr(valor).isdigit()):
-        alfabeto_contem_numero = True
+    if not (variavel == "" or variavel == " "):
+        alfabeto.append(variavel.lower())
+        continuar = input("\nDeseja continuar? (S/N):  \t").upper()
+
+        if continuar != "S":
+            a = False
+
+        for valor in range(0, len(alfabeto), 1):
+            if variavel in vetor:
+                a = True
+                print("\nFoi detectado uma das variáveis digitadas no passo 1. Digite novamente!\n")
+                alfabeto.remove(variavel)
+                valor = len(alfabeto)
+    else:
+        print("\nEspaço em branco ou nulo digitado. Entrada não é válida! Digite novamente!\n")
+    if not a:
+        print("\nFoi detectado espaco em branco ou vazio. Digite novamente!\n")
 
 #Receber as regras de produção
-print("3 - Recebendo a REGRA DE PRODUCAO\n")
+print("\n3 - Recebendo a REGRA DE PRODUCAO\n")
 
 a = True
 b = True
 
 while a:
-    de_variavel = input("Digite a variável a ser subtituida: \t")
+    de_variavel = input("\nDigite a variável a ser subtituida: \t").upper()
+
     if de_variavel not in vetor:
+        print("\nNão foi encontrada a letra digitada nas Variáveis recebidas. Digite novamente!\t")
         de_variavel = ""
     else:
+        # receber as letras de cada vez
+        print("\n########## Por favor, será recebido uma letra de cada vez na regra para. ##########\n")
+        print("\nA letra deve estar contida na variável ou alfabeto\n")
+        print("Precione qualquer tecla para continuar.\n")
+        input()
         while b:
             regras["de"] = de_variavel
-            para_variavel = input("Digite  valor a ser trocado: \t")
-            for valor in range(1, len(vetor) + 1, 1):
-                if re.search(para_variavel, str(valor)) is not None:
-                    regras["de"] = ""
-                    regras["para"] = ""
+            print("")
+            a = False
+            while not a:
+                para_variavel = input("\nDigite  valor a ser trocado: \t")
+                a = valida_para(para_variavel)
+                if not a:
+                    a = False
+                    concatenar += str(para_variavel)
+                    print("\nLetra válida!\n")
+
                 else:
-                    for valor in range(1, len(alfabeto) + 1, 1):
-                        if re.search(para_variavel, str(valor)) is not None:
-                            b = False
+                    a = False
+                if not a:
+                    continuar = input("\nDeseja continuar? (S/N):  \t").upper()
 
-                        else:
-                            regras["de"] = de_variavel
-                            regras["para"] = para_variavel
-                            regras_producao.append(regras)
-
-            continuar = input("Deseja continuar? (S/N):  \t")
-
-            if continuar != "S" or continuar != "s":
-                a = False
+                    if continuar != "S":
+                        regras["de"] = de_variavel.upper()
+                        regras["para"] = concatenar
+                        regras_producao.append(regras)
+                        a = True
+            continuar = input("\nDeseja adicionar outra REGRA DE PRODUÇÃO?\n").upper()
+            if continuar == "S":
                 b = False
+                a = True
 
 
 
 #Receber a variável inicial
 a = True
 b = True
-print("4 - Recebendo a variável INICIAL\n")
+print("\n4 - Recebendo a variável INICIAL\n")
 while b:
     b = False
     a = True
     while a:
-        variavel_inicial = input("Digite a variável Inicial: \t")
+        variavel_inicial = input("\nDigite a variável Inicial: \t").upper()
 
         if variavel_inicial not in vetor:
             a = False
@@ -125,7 +186,7 @@ while b:
 
 #Receber a palavra a ser "encontrada" no fim
 
-print("6 - Recebendo a palavra FINAL que deve ser encontrada\n")
+print("\n6 - Recebendo a palavra FINAL que deve ser encontrada\n")
 
 a = True
 b = True
@@ -133,11 +194,11 @@ b = True
 while b:
     b = False
     while a:
-        palavra_final = input("Digite a palavra a ser encontrada: \t")
+        palavra_final = input("\nDigite a palavra a ser encontrada: \t").lower()
         #Verifica se na palavra final tem alguma variável, se tiver pede para o usuário digitar novamente
-        for valor in range(1, len(vetor) + 1, 1):
+        for valor in range(0, len(vetor), 1):
             if re.search(valor, palavra_final) is None:
-                for valor2 in range(1, len(alfabeto) + 1, 1):
+                for valor2 in range(0, len(alfabeto), 1):
                     if re.search(valor2, str(palavra_final)) is None:
                         a = False
                         b = True
@@ -149,3 +210,13 @@ while b:
 #Iniciar os passos para encontrar a palavra final dada pelo Usuário
 
 #Antes recebe a sequencia utilizada pelo usuário
+
+print("\n7 - Recebendo a sequencia utilizada pelo usupario para chegar na resposta")
+
+a = True
+b = True
+
+while b:
+    b = False
+    while a:
+        sequencia_utilizada_usuario = input("\nDigite a sequencia utilizada para chegar na resposta: \t")
