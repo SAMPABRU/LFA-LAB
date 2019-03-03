@@ -18,11 +18,14 @@ variavel_inicial = ""
 contador = 0
 palavra_final = ""
 sequencia_utilizada_usuario = []
+alfabeto_contem_numero = False
 
 regras = {
     "de": "",
     "para": ""
 }
+
+'''Execução do programa'''
 
 print("1 - Recebendo as VARIAVEIS\n")
 
@@ -33,7 +36,7 @@ while b:
         vetor.append(variavel)
         continuar = input("Deseja continuar? (S/N):  \t")
 
-        if continuar != "S":
+        if continuar != "S" or continuar != "s":
             a = False
 
             '''Verificar se no array eu não tenho espaço em branco, já que isso tem q estar no alfabeto'''
@@ -49,15 +52,24 @@ continuar = ""
 
 
 print("2 - Recebendo as ALFABETO\n")
+
+#Esses caracteres não serão permitidos na String?
+#Verificar se esses caracteres podem existir no alfabeto digitado pelo usuário
+#verificar a presença deles https://www.geeksforgeeks.org/python-program-check-string-contains-special-character/
+#regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
+
 while a:
     letra = input("Digite a letra do alfabeto: \t")
     alfabeto.append(letra)
     continuar = input("Deseja continuar? (S/N):  \t")
 
-    if continuar != "S":
+    if continuar != "S" or continuar != "s":
         a = False
 
-
+for valor in range(1, len(alfabeto) + 1, 1):
+    #Verifica se no alfabeto digitado tem números
+    if any(chr(valor).isdigit()):
+        alfabeto_contem_numero = True
 
 #Receber as regras de produção
 print("3 - Recebendo a REGRA DE PRODUCAO\n")
@@ -89,7 +101,7 @@ while a:
 
             continuar = input("Deseja continuar? (S/N):  \t")
 
-            if continuar != "S":
+            if continuar != "S" or continuar != "s":
                 a = False
                 b = False
 
@@ -116,22 +128,24 @@ while b:
 print("6 - Recebendo a palavra FINAL que deve ser encontrada\n")
 
 a = True
+b = True
 
-while a:
-    palavra_final = input("Digite a palavra a ser encontrada: \t")
-    #Verifica se na palavra final tem alguma variável, se tiver pede para o usuário digitar novamente
-    for valor in range(1, len(vetor) + 1, 1):
-        if re.search(valor, palavra_final) is None:
-            for valor in range(1, len(alfabeto) + 1, 1):
-                if re.search(valor, str(alfabeto)) is None:
-                    a = False
-        else:
-            a = True
-            palavra_final = ""
+while b:
+    b = False
+    while a:
+        palavra_final = input("Digite a palavra a ser encontrada: \t")
+        #Verifica se na palavra final tem alguma variável, se tiver pede para o usuário digitar novamente
+        for valor in range(1, len(vetor) + 1, 1):
+            if re.search(valor, palavra_final) is None:
+                for valor2 in range(1, len(alfabeto) + 1, 1):
+                    if re.search(valor2, str(palavra_final)) is None:
+                        a = False
+                        b = True
+            else:
+                a = True
+                palavra_final = ""
 
 
 #Iniciar os passos para encontrar a palavra final dada pelo Usuário
 
 #Antes recebe a sequencia utilizada pelo usuário
-
-
