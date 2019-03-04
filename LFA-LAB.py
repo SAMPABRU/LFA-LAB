@@ -183,7 +183,7 @@ while a:
                         if len(concatenar) < 1:
                             a = False
                         else:
-                            if regras["de"] != "" and regras["de"] != " " and regras["para"] != "":
+                            if regras["para"] != "" or regras["para"] != " ":
                                 regras["de"] = de_variavel.upper()
                                 regras["para"] = concatenar
                                 regras_producao.append(regras)
