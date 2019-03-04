@@ -223,7 +223,7 @@ while b:
 
 #Receber a palavra a ser "encontrada" no fim
 
-print("\n6 - Recebendo a palavra FINAL que deve ser encontrada\n")
+print("\n5 - Recebendo a palavra FINAL que deve ser encontrada\n")
 
 a = True
 b = True
@@ -243,18 +243,26 @@ while b:
             print("\nA palavra digitada pode ser formada pelo Alfabeto. Tudo ok. Continuando...")
         else:
             print("\nAlguma letra da palavra final não foi encontrada no alfabeto. Por favor, digite novamente!\n")
+            contador = 0
             a = True
 
 #Iniciar os passos para encontrar a palavra final dada pelo Usuário
 
 #Antes recebe a sequencia utilizada pelo usuário
 
-print("\n7 - Recebendo a sequencia utilizada pelo usupario para chegar na resposta")
+print("\n6 - Recebendo a sequencia utilizada pelo usupario para chegar na resposta")
 
 a = True
-b = True
+#b = True
 
-while b:
-    b = False
-    while a:
-        sequencia_utilizada_usuario = input("\nDigite a sequencia utilizada para chegar na resposta: \t")
+
+while a:
+    a = False
+    sequencia_utilizada_usuario = list(input("\nDigite de umavez toda a sequencia utilizada para chegar na resposta: \t"))
+
+    for valor in range(0, len(sequencia_utilizada_usuario), 1):
+        '''Verificaar se o usuário digitou apenas números da sequencia'''
+        if not str(sequencia_utilizada_usuario[valor]).isdigit() or int(sequencia_utilizada_usuario[valor]) > len(regras_producao):
+            a = True
+            break
+
