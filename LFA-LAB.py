@@ -144,10 +144,15 @@ b = True
 
 while a:
     b = True
-    de_variavel = input("\nDigite a variável a ser subtituida: \t").upper()
+    contador = 0
+    de_variavel = list(input("\nDigite a variável a ser subtituida: \t").upper())
 
-    if de_variavel not in vetor:
-        print("\nNão foi encontrada a letra digitada nas Variáveis recebidas. Digite novamente!\t")
+    for valor in range(0, len(de_variavel), 1):
+        if de_variavel[valor] in vetor:
+            contador += 1
+
+    if contador != len(de_variavel):
+        print("\nNão foi encontrada uma das letras ou a letra digitada nas Variáveis recebidas. Digite novamente!\t")
         de_variavel = ""
     else:
         # receber as letras de cada vez
@@ -213,13 +218,25 @@ while b:
     while a:
         variavel_inicial = input("\nDigite a variável Inicial: \t").upper()
 
+        #Verifica se a variável inicial digitada existe
         if variavel_inicial not in vetor:
             print("Variavel inicial não foi encontrada nas VARIÁVEIS! Digite novamente!\n")
             a = False
             b = True
         else:
-            print("Variável válida! Continuando...")
-            a = False
+            #Verifica se a variável está em uma das regras de produção, se não estiver deverá ser digitado novamente
+            for valor in range(0, len(regras_producao), 1):
+                if str(regras_producao[valor]["de"]) != str(variavel_inicial):
+                    a = False
+                else:
+                    a = True
+                    valor = len(regras_producao)
+            if not a:
+                print("Variável existente digitada, porém não está nas regras de produção criada! Digite novamente.")
+                b = True
+            else:
+                print("Variavel inicial válida, existente nas regras de produção digitadas. continuando...")
+
 
 #Receber a palavra a ser "encontrada" no fim
 
@@ -265,4 +282,6 @@ while a:
         if not str(sequencia_utilizada_usuario[valor]).isdigit() or int(sequencia_utilizada_usuario[valor]) > len(regras_producao):
             a = True
             break
+
+#Baseado nos dados de entrada do usuário, buscar a palavra final digitada
 
