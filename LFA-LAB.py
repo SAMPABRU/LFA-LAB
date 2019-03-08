@@ -11,6 +11,8 @@ print("********* ------------------------------- *********")
 
 a = False
 b = True
+c = True
+
 vetor = []
 variavel = ""
 continuar = ""
@@ -23,6 +25,7 @@ sequencia_utilizada_usuario = []
 concatenar = ""
 tamanho_palavra = ""
 contador = 0
+sequencia = 0
 
 regras = {
     "de": "",
@@ -137,6 +140,7 @@ while a:
         print("\nLetra do alfabeto digitada contem mais de um caracter! Digite novamente!\n")
 
 #Receber as regras de produção
+#Receber as regras de produção
 print("\n3 - Recebendo a REGRA DE PRODUCAO\n")
 
 a = True
@@ -173,7 +177,7 @@ while a:
                     print("\nLetra válida!\n")
                     if len(concatenar) == 1:
                         if concatenar == "" or concatenar == " ":
-                            regras["de"] = de_variavel.upper()
+                            regras["de"] = de_variavel
                             regras["para"] = concatenar
                             regras_producao.append(regras)
                             a = True
@@ -189,16 +193,15 @@ while a:
                             a = False
                         else:
                             if regras["para"] != "" or regras["para"] != " ":
-                                regras["de"] = de_variavel.upper()
+                                regras["de"] = de_variavel
                                 regras["para"] = concatenar
                                 regras_producao.append(regras)
+                                concatenar = ""
                                 a = True
                             else:
                                 a = False
                                 print("Valor não pode conter letras e valor nulo. Ou não estar presente no alfabeto ou variáveis!. Digite novamente!\n")
 
-            if len(concatenar) < 1:
-                break
             continuar = input("\nDeseja adicionar outra REGRA DE PRODUÇÃO?\t").upper()
             concatenar = ""
             if continuar == "S":
@@ -211,77 +214,110 @@ while a:
 #Receber a variável inicial
 a = True
 b = True
-print("\n4 - Recebendo a variável INICIAL\n")
-while b:
-    b = False
-    a = True
-    while a:
-        variavel_inicial = input("\nDigite a variável Inicial: \t").upper()
+while c:
+    contador = 0
+    concatenar = ""
+    c = False
+    print("\n4 - Recebendo a variável INICIAL\n")
+    while b:
+        b = False
+        a = True
+        while a:
+            variavel_inicial = input("\nDigite a variável Inicial: \t").upper()
 
-        #Verifica se a variável inicial digitada existe
-        if variavel_inicial not in vetor:
-            print("Variavel inicial não foi encontrada nas VARIÁVEIS! Digite novamente!\n")
-            a = False
-            b = True
-        else:
-            #Verifica se a variável está em uma das regras de produção, se não estiver deverá ser digitado novamente
-            for valor in range(0, len(regras_producao), 1):
-                if str(regras_producao[valor]["de"]) != str(variavel_inicial):
-                    a = False
-                else:
-                    a = True
-                    valor = len(regras_producao)
-            if not a:
-                print("Variável existente digitada, porém não está nas regras de produção criada! Digite novamente.")
+            #Verifica se a variável inicial digitada existe
+            if variavel_inicial not in vetor:
+                print("Variavel inicial não foi encontrada nas VARIÁVEIS! Digite novamente!\n")
+                a = False
                 b = True
             else:
-                print("Variavel inicial válida, existente nas regras de produção digitadas. continuando...")
+                #Verifica se a variável está em uma das regras de produção, se não estiver deverá ser digitado novamente
+                for valor in range(0, len(regras_producao), 1):
+                    if regras_producao[valor]["de"] != list(variavel_inicial):
+                        a = False
+                    else:
+                        a = True
+                        valor = len(regras_producao)
+                if not a:
+                    print("Variável existente digitada, porém não está nas regras de produção criada! Digite novamente.")
+                    b = True
+                else:
+                    a = False
+                    print("Variavel inicial válida, existente nas regras de produção digitadas. continuando...")
 
 
-#Receber a palavra a ser "encontrada" no fim
+    #Receber a palavra a ser "encontrada" no fim
 
-print("\n5 - Recebendo a palavra FINAL que deve ser encontrada\n")
+    print("\n5 - Recebendo a palavra FINAL que deve ser encontrada\n")
 
-a = True
-b = True
+    a = True
+    b = True
+    contador = 0
 
-while b:
-    b = False
+    while b:
+        b = False
+        while a:
+            palavra_final = input("\nDigite a palavra a ser encontrada: \t").lower()
+            lista = list(palavra_final)
+            #Verifica se na palavra final tem alguma variável, se tiver pede para o usuário digitar novamente
+            for valor3 in range(0, len(lista), 1):
+                if lista[valor3] not in alfabeto:
+                    contador += 1
+
+            if contador == 0:
+                a = False
+                print("\nA palavra digitada pode ser formada pelo Alfabeto. Tudo ok. Continuando...")
+            else:
+                print("\nAlguma letra da palavra final não foi encontrada no alfabeto. Por favor, digite novamente!\n")
+                contador = 0
+                a = True
+
+    #Iniciar os passos para encontrar a palavra final dada pelo Usuário
+
+    #Antes recebe a sequencia utilizada pelo usuário
+
+    print("\n6 - Recebendo a sequencia utilizada pelo usupario para chegar na resposta")
+
+    a = True
+    contador = 0
+    #b = True
+
+
     while a:
-        palavra_final = input("\nDigite a palavra a ser encontrada: \t").lower()
-        lista = list(palavra_final)
-        #Verifica se na palavra final tem alguma variável, se tiver pede para o usuário digitar novamente
-        for valor3 in range(0, len(lista), 1):
-            if lista[valor3] not in alfabeto:
-                contador += 1
-
-        if contador == 0:
-            a = False
-            print("\nA palavra digitada pode ser formada pelo Alfabeto. Tudo ok. Continuando...")
-        else:
-            print("\nAlguma letra da palavra final não foi encontrada no alfabeto. Por favor, digite novamente!\n")
-            contador = 0
+        a = False
+        sequencia = (input("\nDigite a sequencia utilizada para chegar na resposta (UM POR VEZ): \t"))
+        if not str(sequencia).isdigit() or int(sequencia) > len(regras_producao):
             a = True
+        else:
+            sequencia_utilizada_usuario.append(int(sequencia) - 1)
+            contador += 1
+            continuar = input("\nDeseja continuar? S/N: \t").upper()
 
-#Iniciar os passos para encontrar a palavra final dada pelo Usuário
+            if continuar == 'S':
+                a = True
+            else:
+                a = False
 
-#Antes recebe a sequencia utilizada pelo usuário
+    #Baseado nos dados de entrada do usuário, buscar a palavra final digitada
 
-print("\n6 - Recebendo a sequencia utilizada pelo usupario para chegar na resposta")
+    n = sequencia_utilizada_usuario[0]
 
-a = True
-#b = True
+    concatenar = str(regras_producao[int(n)]["para"])
+    lista = list(sequencia_utilizada_usuario)
 
-
-while a:
-    a = False
-    sequencia_utilizada_usuario = list(input("\nDigite de umavez toda a sequencia utilizada para chegar na resposta: \t"))
+    #lista = list(concatenar)
 
     for valor in range(0, len(sequencia_utilizada_usuario), 1):
-        '''Verificaar se o usuário digitou apenas números da sequencia'''
-        if not str(sequencia_utilizada_usuario[valor]).isdigit() or int(sequencia_utilizada_usuario[valor]) > len(regras_producao):
-            a = True
-            break
+        concatenar.replace(concatenar, str(regras_producao[sequencia_utilizada_usuario[valor]]["para"]), 1)
+        print(concatenar)
 
-#Baseado nos dados de entrada do usuário, buscar a palavra final digitada
-
+    if str(concatenar) != str(palavra_final):
+        print("\nNão foi possível encontrar a palavra final digitada através dos passos indicados. Digite novamente!\n")
+        print("Palavra final: ", concatenar)
+        print("\n###### SOLICITANDO NOVAMENTE A PALVRA FINAL ######\n")
+        print("\nPressione alguma tecla para continuar.\n")
+        input()
+        c = True
+    else:
+        print("Palavra encontrada! Foi possível achar a palavra final pela sequencia indicada.")
+        print(concatenar)
